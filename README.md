@@ -2,7 +2,7 @@
 
 <b>Introduction</b>
 
-<p>In this study, face detection application was performed using an improved Yolov4-Tiny algorithm on the Jetson Nano platform. There are 2 YOLO outputs in the classic Yolov4-Tiny algorithm. These outputs are generally good at detecting large objects in a picture. In order to detect smaller objects, 3 or more outputs are required, as in Yolov3 and Yolov4 algorithms. In this study, successful results were obtained with a Yolov4-Tiny architecture with 3 prediction layers. TensorRT has been optimized to achieve a high extraction speed.</p>
+<p>In this study, face detection application was performed using an improved Yolov4-Tiny algorithm on the Jetson Nano platform. There are 2 YOLO outputs in the classic Yolov4-Tiny algorithm. These outputs are generally good at detecting large objects in a picture. In order to detect smaller objects, 3 or more outputs are required, as in Yolov3 and Yolov4 algorithms. In this study, successful results were obtained with a Yolov4-Tiny architecture with 3 prediction layers.</p>
 
 <p>Within the scope of the study, not only face detection but also face tracking was performed. Deep Sort algorithm [2], which is a successful algorithm, is used as the tracking algorithm.  In this study, the procedures in Reference [3] are used in the application of the Deep Sort algorithm.</p>
 
@@ -25,7 +25,7 @@ There are 2 prediction layers in the original Yolov4-Tiny architecture. These ha
 Figure 2. Yolov4-Tiny Architecture with 3 prediction layers
 
 <b>Dataset</b>
-In this study, WiderFace data set was used to create face detection model. WiderFace very seti kullanılmıştır. The Wider Face dataset [4] is the most challenging public face detection dataset mainly due to the wide variety of face scales, poses, occlusions, expressions, illuminations and faces with heavily makeup. It has 32,203 images and nearly 400k annotated faces. This dataset randomly select 40%/10%/50% data as training, validation and testing sets. There are 50% faces with small scales (between 10-50 pixels), 43% faces with medium scales (between 50-300 pixels) and 7% faces with large scales (over 300 pixels) in the dataset [4]. There are three subsets with different difficulty: ‘Easy’, ‘Medium’, ‘Hard’. 
+In this study, WiderFace data set was used to create face detection model. The Wider Face dataset [4] is the most challenging public face detection dataset mainly due to the wide variety of face scales, poses, occlusions, expressions, illuminations and faces with heavily makeup. It has 32,203 images and nearly 400k annotated faces. This dataset randomly select 40%/10%/50% data as training, validation and testing sets. There are 50% faces with small scales (between 10-50 pixels), 43% faces with medium scales (between 50-300 pixels) and 7% faces with large scales (over 300 pixels) in the dataset [4]. There are three subsets with different difficulty: ‘Easy’, ‘Medium’, ‘Hard’. 
 
 <b>System Hardware</b>
 The developed system runs on Jetson Nano. A camera with a Sony IMX219 sensor is used as the camera module. The hardware structure can be seen in Figure 3.
@@ -39,28 +39,20 @@ Figure 3. System Hardware
 Support video and webcam demo for now
 
 Make sure everything is settled down
-   - Yolov4-tiny-416 trt file
+   - Yolov4-tiny-416 cfg and weights files
    - demo video you want to test on
 
 Support 
 
-1. onboard camera webcam / usb camera. 
+1. onboard camera webcam 
 2. Video track
 
-- Webcam demo - onboard camera, csi camera
+- Webcam demo - onboard camera
 
   ```shell
 
-  python3 run_tracker.py
+  python run_tracker.py 
  
-  ```
-
-- Webcam demo - usb camera
-
-  ```shell
-  
-  python3 run_tracker.py --usb
-  
   ```
 
 - Video demo
@@ -95,6 +87,4 @@ Whole process time from read image to finished deepsort (include every img prepr
 3.	https://github.com/theAIGuysCode/yolov3_deepsort
 4.	Yang, S., Luo, P., Loy, C. C., & Tang, X. (2016). Wider face: A face detection benchmark. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 5525-5533).
 5.	Toan, N. H., Nu-ri, S., Gwang-Hyun, Y., Gyeong-Ju, K., Woo-Young, K., & Jin-Young, K. (2020). Deep learning-based defective product classification system for smart factory.
-6.	https://developer.nvidia.com/blog/speed-up-inference-tensorrt/
-7.	https://github.com/jkjung-avt/tensorrt_demos
 
