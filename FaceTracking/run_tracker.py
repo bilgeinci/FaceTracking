@@ -28,7 +28,7 @@ class FaceDetection():
 
         ret, frame = reader.read()
         if not ret:
-            print("Unknown command")
+            print("No input")
             sys.exit(2)
 
         net, output_layers, classes = self.load_model()
@@ -146,7 +146,7 @@ if __name__ == '__main__':
     faceDetection = FaceDetection()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=str, default='camera', help=('video/track.mp4'))
+    parser.add_argument('--input', type=str, default='camera', help=('video/your_test.mp4'))
     args = parser.parse_args()
 
     input_file = 0  # input video file location
@@ -154,9 +154,6 @@ if __name__ == '__main__':
         input_file = 0
     else:
         input_file = args.input
-    # else:
-    #     print("usage: %s video path|camera" % args.input)
-    #     sys.exit(2)
 
     faceDetection.start(input_file)
 
