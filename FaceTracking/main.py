@@ -25,13 +25,6 @@ class FaceDetection():
     def start(self, input_file):
         reader = cv2.VideoCapture(input_file)
 
-        fps = reader.get(cv2.CAP_PROP_FPS)
-        frame_width = int(reader.get(3))
-        frame_height = int(reader.get(4))
-
-        output_file = "./video/output.mp4"
-        writer = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*'mp4v'), 15, (frame_width, frame_height))
-
         ret, frame = reader.read()
         if not ret:
             print("Unknown command")
@@ -59,9 +52,8 @@ class FaceDetection():
             self.draw_tracks(frame)
 
             fpsText = "FPS: {}".format(round(fps, 2))
-            #cv2.putText(frame, fpsText, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            cv2.putText(frame, fpsText, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-            writer.write(frame)
             cv2.imshow("Frame", frame)
             key = cv2.waitKey(1)
 
@@ -74,7 +66,6 @@ class FaceDetection():
                 break
 
         reader.release()
-        writer.release()
         cv2.destroyAllWindows()
 
     def load_model(self):
