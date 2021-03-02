@@ -59,7 +59,7 @@ Support
 
   ```shell
   
-  python3 run_tracker.py --file --filename your_test.mp4 --output_file ./output.mp4
+  python run_tracker.py --input video/your_test.mp4
 
   ```
 
