@@ -10,7 +10,7 @@
 The flow chart of the developed system is shown in Figure 1. This method reads the frame in real time from the camera and transmits this frame to the algorithm for face detection. After the detection method, if there is a face in the picture, the detection boxes will be created and displayed. Then, these boxes are sent to the DeepSort algorithm to find tracking boxes, center point locations and IDs of detected faces. This process repeats until the next frame is gone.
 
 
-![alt text](https://github.com/m-peker/Face-Detection-using-Modified-Yolov4-Tiny-on-Jetson-Nano/blob/main/Images/Block-1.png)
+![alt text](https://github.com/bilgeinci/FaceTracking/tree/main/Images/Block-1.png)
 
 Figure 1. The flowchart of the developed face detection and tracking system
 
@@ -20,7 +20,7 @@ The Yolov4-tiny method is designed based on the Yolov4 method to have a faster o
 There are 2 prediction layers in the original Yolov4-Tiny architecture. These have 13x13xN and 26x26xN dimensions. These two outputs are insufficient for detecting small objects. In this study, a Yolov4-Tiny architecture with 3 outputs is used instead of the existing architecture to obtain a 56x56xN output. The parts highlighted in red in Figure 2 represent processes that are different from the existing Yolov4-Tiny structure.
 
 
-![alt text](https://github.com/m-peker/Face-Detection-using-Modified-Yolov4-Tiny-on-Jetson-Nano/blob/main/Images/Block-2.png)
+![alt text](https://github.com/bilgeinci/FaceTracking/tree/main/Images/Block-2.png)
 
 Figure 2. Yolov4-Tiny Architecture with 3 prediction layers
 
@@ -30,7 +30,7 @@ In this study, WiderFace data set was used to create face detection model. Wider
 <b>System Hardware</b>
 The developed system runs on Jetson Nano. A camera with a Sony IMX219 sensor is used as the camera module. The hardware structure can be seen in Figure 3.
 
-![alt text](https://github.com/m-peker/Face-Detection-using-Modified-Yolov4-Tiny-on-Jetson-Nano/blob/main/Images/Block-4.png)
+![alt text](https://github.com/bilgeinci/FaceTracking/tree/main/Images/Block-4.png)
 
 Figure 3. System Hardware
 
