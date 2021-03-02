@@ -10,7 +10,7 @@
 The flow chart of the developed system is shown in Figure 1. This method reads the frame in real time from the camera and transmits this frame to the algorithm for face detection. After the detection method, if there is a face in the picture, the detection boxes will be created and displayed. Then, these boxes are sent to the DeepSort algorithm to find tracking boxes, center point locations and IDs of detected faces. This process repeats until the next frame is gone.
 
 
-![ScreenShot](https://github.com/bilgeinci/FaceTracking/tree/main/Images/Block-1.png)
+![alt_text](https://github.com/bilgeinci/FaceTracking/tree/main/Images/Block-1.png)
 
 Figure 1. The flowchart of the developed face detection and tracking system
 
