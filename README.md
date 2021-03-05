@@ -2,7 +2,7 @@
 
 <b>Introduction</b>
 
-<p>In this study, face detection application was performed using an improved Yolov4-Tiny algorithm on the Jetson Nano platform. There are 2 YOLO outputs in the classic Yolov4-Tiny algorithm. These outputs are generally good at detecting large objects in a picture. In order to detect smaller objects, 3 or more outputs are required, as in Yolov3 and Yolov4 algorithms. In this study, successful results were obtained with a Yolov4-Tiny architecture with 3 prediction layers.</p>
+<p>In this study, face detection application was performed using an improved Yolov4-Tiny algorithm on the Jetson Nano platform. There are 2 YOLO outputs in the classic Yolov4-Tiny algorithm. These outputs are generally good at detecting large objects in a picture. In order to detect smaller objects, 3 or more outputs are required, as in Yolov3 and Yolov4 algorithms. In this study, successful results were obtained with a Yolov4-Tiny architecture with 3 prediction layers. TensorRT has been optimized to achieve a high extraction speed.</p>
 
 <p>Within the scope of the study, not only face detection but also face tracking was performed. Deep Sort algorithm [2], which is a successful algorithm, is used as the tracking algorithm.  In this study, the procedures in Reference [3] are used in the application of the Deep Sort algorithm.</p>
 
@@ -27,19 +27,28 @@ Figure 2. Yolov4-Tiny Architecture with 3 prediction layers
 <b>Dataset</b>
 In this study, WiderFace data set was used to create face detection model. The Wider Face dataset [4] is the most challenging public face detection dataset mainly due to the wide variety of face scales, poses, occlusions, expressions, illuminations and faces with heavily makeup. It has 32,203 images and nearly 400k annotated faces. This dataset randomly select 40%/10%/50% data as training, validation and testing sets. There are 50% faces with small scales (between 10-50 pixels), 43% faces with medium scales (between 50-300 pixels) and 7% faces with large scales (over 300 pixels) in the dataset [4]. There are three subsets with different difficulty: ‘Easy’, ‘Medium’, ‘Hard’. 
 
+<b>TensorRT Optimization</b>
+To further reduce inference time, we utilize TensorRT to minimize model bandwidth as well as computation time. An overview of the deep learning end-to-end workflow is shown in Figure 3.
+
+![alt text](https://github.com/bilgeinci/FaceTracking/blob/main/Images/Block-3.png)
+
+Figure 3. End-to-end deep learning flow [5]
+
+The deep learning model is trained using the GPU server. The resulting model is saved on the embedded card, optimized for distribution. In this study, Jetson Nano was chosen to deploy the pre-trained model because of its physical size and computational power. According to [6], the TensorRT-based application performs up to 40 times faster than platforms that use CPU-only at inference. The experimental results show that the deployed model can operate at real time speed.  In the creation of the TensorRT model, the procedures in Reference [7] were applied.
+
 <b>System Hardware</b>
-The developed system runs on Jetson Nano. A camera with a Sony IMX219 sensor is used as the camera module. The hardware structure can be seen in Figure 3.
+The developed system runs on Jetson Nano. A camera with a Sony IMX219 sensor is used as the camera module. The hardware structure can be seen in Figure 4.
 
 ![alt text](https://github.com/bilgeinci/FaceTracking/blob/main/Images/Block-4.png)
 
-Figure 3. System Hardware
+Figure 4. System Hardware
 
 ## Demo
 
 Support video and webcam demo for now
 
 Make sure everything is settled down
-   - Yolov4-tiny-416 cfg and weights files
+   - Yolov4-tiny-416 trt file
    - demo video you want to test on
 
 Support 
@@ -75,7 +84,7 @@ Whole process time from read image to finished deepsort (include every img prepr
 | Backbone                                      | detection + tracking | FPS(detection + tracking) |
 | :---------------------------------------------| ---------------------| ------------------------- |
 | Yolov4-tiny-416                               | 450ms                | 1.5 ~ 2                   |   
-| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | 2   ~ 2.5                 |
+| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | 4.5   ~ 5                 |
 
 ------
 
@@ -87,4 +96,6 @@ Whole process time from read image to finished deepsort (include every img prepr
 3.	https://github.com/theAIGuysCode/yolov3_deepsort
 4.	Yang, S., Luo, P., Loy, C. C., & Tang, X. (2016). Wider face: A face detection benchmark. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 5525-5533).
 5.	Toan, N. H., Nu-ri, S., Gwang-Hyun, Y., Gyeong-Ju, K., Woo-Young, K., & Jin-Young, K. (2020). Deep learning-based defective product classification system for smart factory.
+6.	https://developer.nvidia.com/blog/speed-up-inference-tensorrt/
+7.	https://github.com/jkjung-avt/tensorrt_demos
 
