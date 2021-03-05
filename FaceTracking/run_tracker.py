@@ -11,6 +11,9 @@ from deepsort import preprocessing
 
 import argparse
 import time
+from yolo_with_plugins import TrtYOLO
+
+import pycuda.autoinit
 
 class FaceDetection():
     def __init__(self):
@@ -21,34 +24,21 @@ class FaceDetection():
 
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.3)
         self.tracker = DeepTracker(metric, max_iou_distance=0.9, max_age=5)
+        self.model = TrtYOLO("yolov4-tiny-416", (416, 416), 80, False)
         self.memory = {}
 
     def start(self, input_file):
         reader = cv2.VideoCapture(input_file)
-
         ret, frame = reader.read()
         if not ret:
             print("No input")
             sys.exit(2)
 
-        net, output_layers, classes = self.load_model()
-
         fps = 0.0
         tic = time.time()
         while True:
             ret, frame = reader.read()
-            boxes, class_ids = self.detect(net, output_layers, frame, confidence_threshold=0.2)
-
-            features = self.encoder(frame, boxes)
-            dets = [Detection(bbox, 1.0, feature) for bbox, feature in zip(boxes, features)]
-
-            boxes = np.array([d.tlwh for d in dets])
-            scores = np.array([d.confidence for d in dets])
-            indices = preprocessing.non_max_suppression(boxes, self.nms_max_overlap, scores)
-            detections = [dets[i] for i in indices]
-
-            self.tracker.predict()
-            self.tracker.update(detections)
+            self.detection_tracking_unit(frame, 0.2)
 
             self.draw_tracks(frame)
 
@@ -69,48 +59,30 @@ class FaceDetection():
         reader.release()
         cv2.destroyAllWindows()
 
-    def load_model(self):
-        net = cv2.dnn.readNetFromDarknet("./data/3l.cfg", "./data/3l.weights")
-        with open("./data/obj.names", "r") as f:
-            classes = [line.strip() for line in f.readlines()]
-        layer_names = net.getLayerNames()
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-        return net, output_layers, classes
+    def detection_tracking_unit(self, image, conf_th):
+        image1 = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        dets = []
+        detections = []
 
-    # Funcion to detect objects
-    def detect(self, net, output_layers, img, confidence_threshold):
-        height, width, channels = img.shape
-        blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
-        net.setInput(blob)
-        outs = net.forward(output_layers)
-        class_ids = []
-        confidences = []
-        boxes = []
+        bboxes, confs, clss = self.model.detect(image, conf_th) 
+        for box in bboxes:
+            x = int(box[0]) + int((box[2] - box[0]) / 2)
+            y = int(box[1]) + int((box[3] - box[1]) / 2)
+            dets.append(np.array([int(box[0]), int(box[1]), int(box[2]-box[0]+10), int(box[3]-box[1]+10)]))
 
-        for out in outs:
-            for detection in out:
-                scores = detection[5:]
-                class_id = np.argmax(scores)
-                confidence = scores[class_id]
-                if confidence > confidence_threshold:
-                    center_x = int(detection[0] * width)
-                    center_y = int(detection[1] * height)
-                    w = int(detection[2] * width)
-                    h = int(detection[3] * height)
+        features = self.encoder(image1, dets)
+        detections = [Detection(bbox, 1.0, feature) for bbox, feature in zip(dets, features)]
 
-                    # Rectangle Coordinates
-                    x = center_x - w / 2
-                    y = center_y - h / 2
-                    boxes.append([x, y, w, h])
-                    confidences.append(float(confidence))
-                    class_ids.append(class_id)
+        boxes = np.array([d.tlwh for d in detections])
+        scores = np.array([d.confidence for d in detections])
+        indices = preprocessing.non_max_suppression(boxes, 1.0, scores)
+        detections = [detections[i] for i in indices]
 
-        # Applying Non-Max Suppression
-        indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.5)
+        self.tracker.predict()
+        self.tracker.update(detections)
 
-        boxes = [boxes[i[0]] for i in indexes]
-        class_ids = [class_ids[i[0]] for i in indexes]
-        return boxes, class_ids
+        del image1
+        return dets
 
     def draw_tracks(self, frame):
         boxes = []
@@ -151,7 +123,7 @@ if __name__ == '__main__':
 
     input_file = 0  # input video file location
     if args.input == "camera":
-        input_file = 0
+        input_file = "nvarguscamerasrc sensor_mode=0 ! video/x-raw(memory:NVMM), format=NV12, width=3820, height=2464, framerate=21/1 ! nvvidconv ! video/x-raw, width=640, height=480, format=(string)BGRx ! videoconvert ! video/x-raw, format=(string)BGR ! appsink"
     else:
         input_file = args.input
 
