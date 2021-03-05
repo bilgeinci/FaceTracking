@@ -84,7 +84,7 @@ Whole process time from read image to finished deepsort (include every img prepr
 | Backbone                                      | detection + tracking | FPS(detection + tracking) |
 | :---------------------------------------------| ---------------------| ------------------------- |
 | Yolov4-tiny-416                               | 450ms                | 1.5 ~ 2                   |   
-| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | 4.5   ~ 5                 |
+| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | 8   ~ 9                   |
 
 ------
 
