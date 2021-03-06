@@ -1,4 +1,3 @@
-# Importing the libraries
 import cv2
 import numpy as np
 import sys
@@ -23,8 +22,8 @@ class FaceDetection():
         self.encoder = generate_detections.create_box_encoder(model_filename, batch_size=1)
 
         metric = nn_matching.NearestNeighborDistanceMetric("cosine", 0.3)
-        self.tracker = DeepTracker(metric, max_iou_distance=0.9, max_age=5)
-        self.model = TrtYOLO("yolov4-tiny-416", (416, 416), 80, False)
+        self.tracker = DeepTracker(metric, max_iou_distance=0.7, max_age=8)
+        self.model = TrtYOLO("yolov4-tiny-416", (416, 416), 1, False)
         self.memory = {}
 
     def start(self, input_file):
@@ -38,12 +37,12 @@ class FaceDetection():
         tic = time.time()
         while True:
             ret, frame = reader.read()
-            self.detection_tracking_unit(frame, 0.2)
+            self.detection_tracking_unit(frame, 0.5)
 
             self.draw_tracks(frame)
 
             fpsText = "FPS: {}".format(round(fps, 2))
-            cv2.putText(frame, fpsText, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            #cv2.putText(frame, fpsText, (15, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
             cv2.imshow("Frame", frame)
             key = cv2.waitKey(1)
@@ -62,12 +61,9 @@ class FaceDetection():
     def detection_tracking_unit(self, image, conf_th):
         image1 = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         dets = []
-        detections = []
 
         bboxes, confs, clss = self.model.detect(image, conf_th) 
         for box in bboxes:
-            x = int(box[0]) + int((box[2] - box[0]) / 2)
-            y = int(box[1]) + int((box[3] - box[1]) / 2)
             dets.append(np.array([int(box[0]), int(box[1]), int(box[2]-box[0]+10), int(box[3]-box[1]+10)]))
 
         features = self.encoder(image1, dets)
