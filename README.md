@@ -89,7 +89,7 @@ Whole process time from read image to finished deepsort (include every img prepr
 | Yolov4-tiny-416                               | 450ms                | ~ 2                       |   
 | Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | ~ 1.5                     |  
 | Yolov4-tiny-416 TensorRT Version              | 100ms                | ~ 9                       |  
-| Yolov4-tiny-416 (with 3 Yolo predicted layer) |                      |                           |
+| Yolov4-tiny-416 (with 3 Yolo predicted layer) 
   TensorRT version                              | 125ms                | ~ 7                       |
 
 ------
