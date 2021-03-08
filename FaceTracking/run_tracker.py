@@ -37,8 +37,8 @@ class FaceDetection():
         tic = time.time()
         while True:
             ret, frame = reader.read()
+            
             self.detection_tracking_unit(frame, 0.5)
-
             self.draw_tracks(frame)
 
             fpsText = "FPS: {}".format(round(fps, 2))
