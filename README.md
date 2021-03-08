@@ -1,4 +1,4 @@
-# Face-Detection-using-Modified-Yolov4-Tiny-on-Jetson-Nano
+# Face Detection and Tracking using Modified Yolov4 Tiny and DeepSort Algorithm on Jetson Nano
 
 <b>Introduction</b>
 
@@ -33,6 +33,9 @@ To further reduce inference time, we utilize TensorRT to minimize model bandwidt
 ![alt text](https://github.com/bilgeinci/FaceTracking/blob/main/Images/Block-3.png)
 
 Figure 3. End-to-end deep learning flow [5]
+
+<b>TensorRT model</b>
+https://drive.google.com/file/d/1ZFVp3JLHWgA1GpJ55lig_UfuYfK3IUEQ/view?usp=sharing
 
 The deep learning model is trained using the GPU server. The resulting model is saved on the embedded card, optimized for distribution. In this study, Jetson Nano was chosen to deploy the pre-trained model because of its physical size and computational power. According to [6], the TensorRT-based application performs up to 40 times faster than platforms that use CPU-only at inference. The experimental results show that the deployed model can operate at real time speed.  In the creation of the TensorRT model, the procedures in Reference [7] were applied.
 
@@ -72,9 +75,9 @@ Support
 
   ```
 
-Youtube Linki - Video için
+https://www.youtube.com/watch?v=IuDLv45nabI
 
-Youtube Linki - Kamera için
+https://www.youtube.com/watch?v=xe8spWRHXHY
 
 ------
 ## Speed
@@ -83,8 +86,11 @@ Whole process time from read image to finished deepsort (include every img prepr
 
 | Backbone                                      | detection + tracking | FPS(detection + tracking) |
 | :---------------------------------------------| ---------------------| ------------------------- |
-| Yolov4-tiny-416                               | 450ms                | 1.5 ~ 2                   |   
-| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | 8   ~ 9                   |
+| Yolov4-tiny-416                               | 450ms                | ~ 2                       |   
+| Yolov4-tiny-416 (with 3 Yolo predicted layer) | 500ms                | ~ 1.5                     |  
+| Yolov4-tiny-416 TensorRT Version              | 100ms                | ~ 9                       |  
+| Yolov4-tiny-416 (with 3 Yolo predicted layer) |                      |                           |
+  TensorRT version                              | 125ms                | ~ 7                       |
 
 ------
 
