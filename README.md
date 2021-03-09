@@ -77,8 +77,6 @@ Support
 
 https://www.youtube.com/watch?v=IuDLv45nabI
 
-https://www.youtube.com/watch?v=xe8spWRHXHY
-
 ------
 ## Speed
 
